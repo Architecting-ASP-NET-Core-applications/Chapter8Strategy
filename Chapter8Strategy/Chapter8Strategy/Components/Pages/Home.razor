@@ -13,8 +13,13 @@
 
 <button @onclick="() => ProcessPayment(100M)">Pay $100</button>
 
+@if (!string.IsNullOrEmpty(Payment))
+{
+    <h3>The selected payment is <span>@Payment</span></h3>
+}
 @code {
     private PaymentContext paymentContext;
+    private string Payment = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -24,7 +29,7 @@
 
     private void ChangePaymentStrategy(ChangeEventArgs e)
     {
-        if (e.Value.ToString() == "CreditCard")
+        if (e.Value.ToString() is "CreditCard")
             paymentContext.SetPaymentStrategy(PaymentStrategies.FirstOrDefault(p => p is CreditCardPayment));
         else
             paymentContext.SetPaymentStrategy(PaymentStrategies.FirstOrDefault(p => p is PaypalPayment));
@@ -33,5 +38,6 @@
     private async Task ProcessPayment(decimal amount)
     {
         await paymentContext.ExecutePayment(amount);
+        Payment = paymentContext.GetPaymentProcess();
     }
 }

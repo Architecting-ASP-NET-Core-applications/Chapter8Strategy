@@ -18,4 +18,18 @@ public class PaymentContext
     {
         await paymentStrategy.ProcessPaymentAsync(amount);
     }
+
+    public string GetPaymentProcess()
+    {
+        var ret = string.Empty;
+        if(paymentStrategy is CreditCardPayment)
+        {
+            ret = "Credit card";
+        }
+        if (paymentStrategy is PaypalPayment)
+        {
+            ret = "PayPal";
+        }
+        return ret;
+    }
 }
